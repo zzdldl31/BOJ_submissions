@@ -27,13 +27,16 @@ struct pair_hash {
 };
 
 int N;
-unordered_set<pair<int, int>, pair_hash> S;
 unordered_set<int> Si;
+unordered_set<pair<int,int>, pair_hash> Si;
 pair<int, int> p[100000];
-
 int curmin = -1;
 
 
+int Neighbor[HASH_SIZE];
+vector<int> Mesh[HASH_SIZE];
+int hashindex[100000];
+float cellsize;
 
 
 int dist(pair<int, int> p1, pair<int, int> p2) {
@@ -42,11 +45,11 @@ int dist(pair<int, int> p1, pair<int, int> p2) {
 	return dsq;
 }
 
-int d_i(pair<int, int> x0) {
+int d_i(int i) {
 
 	int mind = -1;
-	for (auto i : Si) {
-		int d = dist(x0, p[i]);
+	for (auto j : Si) {
+		int d = dist(p[i], p[j]);
 		if (d == 0) continue;
 		if (mind<0 || mind>d)
 			mind = d;
@@ -54,10 +57,6 @@ int d_i(pair<int, int> x0) {
 	return mind;
 }
 
-int Neighbor[HASH_SIZE];
-vector<int> Mesh[HASH_SIZE];
-int hashindex[100000];
-float cellsize;
 
 
 void Nsearch(int mesh) {
@@ -124,23 +123,25 @@ void remove_alone() {
 void clearmesh() {
 	fill(Neighbor, Neighbor+N, 0);
 }
-int frame=0;
+void clear_mv() {
+	for (int i = 0; i < N; i++) {
+		int x, y;
+		x = p[i].first; y = p[i].second;
+		int hh = Hfunc(x, y);
+		Mesh[hh].clear();
+	}
+}
+
+
 void Sieve() {
 
 	do {
-		/*
-		unordered_set<int>::iterator it = Si.begin();
-		frame %= Si.size();
-		for (int ii = 0; ii < frame; ii++)it++;
-		pair<int, int> x0 = p[*it];
-		*/
-		pair<int, int> x0 = p[*Si.begin()];
-		frame++;
+		//pair<int, int> x0 = p[*Si.begin()];
 
-		int mind = d_i(x0);
+		int mind = d_i(0);
 
 		curmin = (curmin<0 || curmin>mind) ? mind : curmin;
-		if (curmin <= 1) {
+		if (curmin>=0 && curmin <= 1) {
 			return;
 		}
 
@@ -173,23 +174,30 @@ int main() {
 		cin >> x >> y;
 
 		p[i] = make_pair(x, y);
+		int hh = Hfunc(x, y);
 		
-		if (S.find(p[i]) != S.end()) {
-			dup = true;
+		if (!dup && Mesh[hh].size() > 0) {
+			for (auto j : Mesh[hh]) {
+				if (p[i].first == p[j].first && p[i].second == p[j].second){
+					dup = true;
+					break;
+				}
+			}
 		}
 		else {
-			S.insert(p[i]);
+			Mesh[hh].push_back(i);
 			Si.insert(i);
 		}
 	}
-	S.clear();
 	if (dup) {
 		cout << 0;
 		return 0;
 	}
 
+	clear_mv();
+	//clearmesh();
 	Sieve();
 	cout << curmin;
-	Si.clear();
+
 	return 0;
 }
