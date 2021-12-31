@@ -47,5 +47,12 @@
     <ClCompile Include="5525.cpp" />
     <ClCompile Include="7569.cpp" />
     <ClCompile Include="template.cpp" />
+    <ClCompile Include="20149.cpp" />
+    <ClCompile Include="1920.cpp" />
+    <ClCompile Include="15552.cpp" />
+    <ClCompile Include="21605.cpp" />
+    <ClCompile Include="17387.cpp" />
+    <ClCompile Include="2467.cpp" />
+    <ClCompile Include="12852.cpp" />
   </ItemGroup>
 </Project>

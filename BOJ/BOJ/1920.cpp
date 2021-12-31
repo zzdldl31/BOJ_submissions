@@ -1,11 +1,11 @@
 #define FastIO ios::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 #include <iostream>
-#include <unordered_set>
+#include <set>
 using namespace std;
 
 
 int N, M;
-unordered_set<int> S;
+set<int> S;
 
 int main() {
 
